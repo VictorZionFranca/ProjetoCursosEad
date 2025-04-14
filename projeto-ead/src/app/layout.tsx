@@ -1,7 +1,7 @@
 import './globals.css'
 
 export const metadata = {
-  title: 'Projeto EAD',
+  title: 'Sistema EAD',
   description: 'Plataforma de cursos online',
 }
 
