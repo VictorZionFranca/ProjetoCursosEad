@@ -20,28 +20,10 @@ export default function DashboardPage() {
     return () => unsubscribe();
   }, [router]);
 
-  if (!user) return null;
+  if (!user) return null; // Espera o usuário estar autenticado antes de renderizar
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800">
-      {/* Header */}
-      <header className="bg-white shadow-md sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-xl font-bold">Sistema EAD</h1>
-          <div className="flex items-center space-x-4">
-            <span className="text-sm text-gray-600">
-              Olá, {user.displayName || user.email}
-            </span>
-            <button
-              onClick={() => auth.signOut().then(() => router.push("/"))}
-              className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition"
-            >
-              Sair
-            </button>
-          </div>
-        </div>
-      </header>
-
       {/* Conteúdo */}
       <main className="max-w-7xl mx-auto px-4 py-16">
         <h2 className="text-3xl font-bold mb-6">Cursos disponíveis</h2>
