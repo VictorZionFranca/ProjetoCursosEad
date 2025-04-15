@@ -29,7 +29,9 @@ export default function DashboardPage() {
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-xl font-bold">Sistema EAD</h1>
           <div className="flex items-center space-x-4">
-            <span className="text-sm text-gray-600">Olá, {user.email}</span>
+            <span className="text-sm text-gray-600">
+              Olá, {user.displayName || user.email}
+            </span>
             <button
               onClick={() => auth.signOut().then(() => router.push("/"))}
               className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition"
@@ -46,9 +48,18 @@ export default function DashboardPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {[
-            { title: "Curso de HTML e CSS", desc: "Aprenda a construir sites modernos do zero." },
-            { title: "JavaScript Essencial", desc: "Domine a linguagem da web com aulas práticas." },
-            { title: "React para Iniciantes", desc: "Construa aplicações web com React e componentes." },
+            {
+              title: "Curso de HTML e CSS",
+              desc: "Aprenda a construir sites modernos do zero.",
+            },
+            {
+              title: "JavaScript Essencial",
+              desc: "Domine a linguagem da web com aulas práticas.",
+            },
+            {
+              title: "React para Iniciantes",
+              desc: "Construa aplicações web com React e componentes.",
+            },
           ].map((curso, idx) => (
             <div key={idx} className="bg-white rounded-lg shadow-md p-6">
               <h3 className="text-xl font-semibold mb-2">{curso.title}</h3>

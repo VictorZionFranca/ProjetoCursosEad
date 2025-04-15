@@ -1,10 +1,16 @@
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../firebase/config"
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth } from "../../firebase/config";
 
-// Registrar novo usuário
-export async function signup(email: string, password: string) {
+// Registrar novo usuário com nome
+export async function signup(email: string, password: string, nome: string) {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    
+    // Adiciona o nome no perfil do usuário
+    await updateProfile(userCredential.user, {
+      displayName: nome,
+    });
+
     return userCredential.user;
   } catch (error) {
     throw error;

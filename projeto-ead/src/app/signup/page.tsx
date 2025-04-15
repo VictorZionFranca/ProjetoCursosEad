@@ -3,73 +3,113 @@
 import { useState } from "react";
 import { signup } from "../services/auth";
 import { useRouter } from "next/navigation";
+import { EyeIcon, EyeSlashIcon } from '@heroicons/react/20/solid';
 
 export default function SignupPage() {
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await signup(email, password);
-      router.push("/inicio"); // Redireciona após cadastro (ajuste conforme seu fluxo)
+      await signup(email, password, nome);
+      router.replace("/inicio");
     } catch (error: any) {
-      alert("Erro ao cadastrar: " + error.message);
+      setErrorMessage("Email Inválido!");
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 3000);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-      <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">Criar Conta</h2>
-        <form className="space-y-5" onSubmit={handleSubmit}>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Nome</label>
-            <input
-              type="text"
-              value={nome}
-              onChange={(e) => setNome(e.target.value)}
-              className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Seu nome completo"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="seuemail@exemplo.com"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Senha</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="********"
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
-          >
-            Cadastrar
-          </button>
-        </form>
-        <p className="text-center text-sm text-gray-500 mt-4">
-          Já tem uma conta?{" "}
-          <a href="/login" className="text-blue-600 hover:underline">Entrar</a>
-        </p>
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4">
+      <h1 className="text-3xl font-bold text-gray-800 mb-12 text-center">
+        Faça seu cadastro!
+      </h1>
+
+      <div className="flex flex-col lg:flex-row items-center gap-12">
+        {/* Imagem visível apenas em telas grandes */}
+        <img
+          src="/images/cursos2.png"
+          alt=""
+          className="hidden lg:block w-[800px] h-[260px] rounded-tr-full object-cover"
+        />
+
+        <div className="max-w-md w-full bg-white bg-opacity-90 p-8 rounded-lg shadow-lg">
+          <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
+            Criar Conta
+          </h2>
+          <form className="space-y-5" onSubmit={handleSubmit}>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Nome</label>
+              <input
+                type="text"
+                value={nome}
+                onChange={(e) => setNome(e.target.value)}
+                className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Seu nome completo"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="seuemail@exemplo.com"
+                required
+              />
+            </div>
+            <div className="relative">
+              <label className="block text-sm font-medium text-gray-700">Senha</label>
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="********"
+                required
+              />
+              <div
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute top-1/2 right-4 transform cursor-pointer"
+              >
+                {showPassword ? (
+                  <EyeSlashIcon className="w-5 h-5 text-gray-800" />
+                ) : (
+                  <EyeIcon className="w-5 h-5 text-gray-800" />
+                )}
+              </div>
+            </div>
+            <button
+              type="submit"
+              className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
+            >
+              Cadastrar
+            </button>
+          </form>
+          <p className="text-center text-sm text-gray-500 mt-4">
+            Já tem uma conta?{" "}
+            <a href="/login" className="text-blue-600 hover:underline">
+              Entrar
+            </a>
+          </p>
+        </div>
       </div>
+
+      {/* Mensagem de erro */}
+      {errorMessage && (
+        <div className="fixed bottom-4 right-4 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg">
+          {errorMessage}
+        </div>
+      )}
     </div>
   );
 }
