@@ -64,10 +64,9 @@ export default function DashboardPage() {
             <p>Nenhum curso encontrado.</p>
           ) : (
             cursos.map((curso) => (
-              <Link
-                href={`/curso/${curso.id}`}
+              <div
                 key={curso.id}
-                className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col w-[300px] h-[360px] font-gothic hover:shadow-xl transition duration-300 cursor-pointer"
+                className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col w-[300px] h-[400px] font-gothic"
               >
                 {curso.imagem && (
                   <img
@@ -83,9 +82,17 @@ export default function DashboardPage() {
                   <p className="text-sm text-gray-600 mb-4 flex-1">
                     {truncateText(curso.descricao, 80)}
                   </p>
-                  <p className="text-black font-bold">R$ {curso.preco?.toFixed(2)}</p>
+                  <p className="text-black font-bold mb-4">
+                    R$ {curso.preco?.toFixed(2)}
+                  </p>
+                  <Link
+                    href={`/curso/${curso.id}`}
+                    className="mt-auto bg-blue-600 text-white text-center py-2 px-4 rounded hover:bg-blue-700 transition"
+                  >
+                    Ver mais
+                  </Link>
                 </div>
-              </Link>
+              </div>
             ))
           )}
         </div>

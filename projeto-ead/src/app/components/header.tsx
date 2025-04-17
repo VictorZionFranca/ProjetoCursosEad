@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ShoppingCart } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { auth } from "../../firebase/config";
+import { auth, db } from "../../firebase/config";
 import type { User as FirebaseUser } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 
 type HeaderProps = {
   user: FirebaseUser | null;
@@ -16,6 +17,7 @@ type HeaderProps = {
 export default function Header({ user, menuOpen, setMenuOpen }: HeaderProps) {
   const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [carrinhoCount, setCarrinhoCount] = useState(0);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -36,6 +38,27 @@ export default function Header({ user, menuOpen, setMenuOpen }: HeaderProps) {
     };
   }, [menuOpen, setMenuOpen]);
 
+  useEffect(() => {
+    const fetchCarrinho = async () => {
+      if (!user) return;
+
+      try {
+        const userRef = doc(db, "Users", user.uid);
+        const docSnap = await getDoc(userRef);
+
+        if (docSnap.exists()) {
+          const dados = docSnap.data();
+          const carrinho = dados.carrinho || [];
+          setCarrinhoCount(carrinho.length);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar carrinho:", error);
+      }
+    };
+
+    fetchCarrinho();
+  }, [user]);
+
   const handleLogout = async () => {
     await auth.signOut();
     router.push("/");
@@ -49,26 +72,41 @@ export default function Header({ user, menuOpen, setMenuOpen }: HeaderProps) {
         </a>
 
         <div className="relative flex items-center gap-4">
+          {/* Ícone de carrinho com contador no hover */}
+          <div className="relative group">
+            <a
+              href="/meu-carrinho"
+              className="p-2 rounded-md hover:bg-gray-100 transition"
+            >
+              <ShoppingCart className="w-6 h-6 text-gray-700" />
+            </a>
+
+            {/* Texto exibido no hover */}
+            <div className="absolute left-1/2 -bottom-6 transform -translate-x-1/2 text-xs text-white bg-gray-800 px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+              {carrinhoCount === 1 ? "1 item" : `${carrinhoCount} itens`}
+            </div>
+          </div>
+
           {/* Foto do usuário */}
           <div className="w-[45px] h-[45px] rounded-full border border-gray-300 bg-gray-200 flex items-center justify-center overflow-hidden">
             <a href="/perfil">
-            {user?.photoURL ? (
-              <img
-                src={user.photoURL}
-                alt="Foto do usuário"
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <span className="text-gray-700 font-bold text-lg">
-                {user?.displayName
-                  ? user.displayName
-                      .split(" ")
-                      .slice(0, 2) // Pega as duas primeiras palavras
-                      .map((word) => word.charAt(0).toUpperCase()) // Pega a primeira letra de cada palavra
-                      .join("") // Junta as letras
-                  : "?"}
-              </span>
-            )}
+              {user?.photoURL ? (
+                <img
+                  src={user.photoURL}
+                  alt="Foto do usuário"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <span className="text-gray-700 font-bold text-lg">
+                  {user?.displayName
+                    ? user.displayName
+                        .split(" ")
+                        .slice(0, 2)
+                        .map((word) => word.charAt(0).toUpperCase())
+                        .join("")
+                    : "?"}
+                </span>
+              )}
             </a>
           </div>
 
