@@ -73,7 +73,7 @@ export default function DashboardPage() {
                   <img
                     src={curso.imagem}
                     alt={curso.titulo}
-                    className="w-full h-[200px] object-cover"
+                    className="w-full h-[172px] object-cover"
                   />
                 )}
                 <div className="p-6 flex flex-col flex-1">

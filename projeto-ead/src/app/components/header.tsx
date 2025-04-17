@@ -8,7 +8,7 @@ import { auth } from "../../firebase/config";
 import type { User as FirebaseUser } from "firebase/auth";
 
 type HeaderProps = {
-  user: FirebaseUser | null; // Permite que user seja null
+  user: FirebaseUser | null;
   menuOpen: boolean;
   setMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -17,7 +17,6 @@ export default function Header({ user, menuOpen, setMenuOpen }: HeaderProps) {
   const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Fecha o menu ao clicar fora
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -48,7 +47,32 @@ export default function Header({ user, menuOpen, setMenuOpen }: HeaderProps) {
         <a href="/inicio">
           <h1 className="text-xl font-bold">Sistema EAD</h1>
         </a>
-        <div className="relative">
+
+        <div className="relative flex items-center gap-4">
+          {/* Foto do usuário */}
+          <div className="w-[45px] h-[45px] rounded-full border border-gray-300 bg-gray-200 flex items-center justify-center overflow-hidden">
+            <a href="/perfil">
+            {user?.photoURL ? (
+              <img
+                src={user.photoURL}
+                alt="Foto do usuário"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <span className="text-gray-700 font-bold text-lg">
+                {user?.displayName
+                  ? user.displayName
+                      .split(" ")
+                      .slice(0, 2) // Pega as duas primeiras palavras
+                      .map((word) => word.charAt(0).toUpperCase()) // Pega a primeira letra de cada palavra
+                      .join("") // Junta as letras
+                  : "?"}
+              </span>
+            )}
+            </a>
+          </div>
+
+          {/* Botão de menu */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             className="p-2 rounded-md hover:bg-gray-100 transition"
@@ -60,6 +84,7 @@ export default function Header({ user, menuOpen, setMenuOpen }: HeaderProps) {
             )}
           </button>
 
+          {/* Dropdown do menu */}
           <AnimatePresence>
             {menuOpen && (
               <motion.div
@@ -68,7 +93,7 @@ export default function Header({ user, menuOpen, setMenuOpen }: HeaderProps) {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.15 }}
-                className="absolute right-0 mt-2 w-[220px] bg-white shadow-lg rounded-lg z-50 py-4 px-6 border-gray-200 border-2"
+                className="absolute right-0 mt-[260px] w-[220px] bg-white shadow-lg rounded-lg z-50 py-4 px-6 border-gray-200 border-2"
               >
                 {user ? (
                   <>
