@@ -66,7 +66,7 @@ export default function Header({ user, menuOpen, setMenuOpen }: HeaderProps) {
 
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">
-      <div className="max-w-[105rem] mx-auto px-4 py-4 flex justify-between items-center">
+      <div className="max-w-[105rem] h-[80px] mx-auto px-4 flex justify-between items-center">
         <a href="/inicio">
           <h1 className="text-xl font-bold">Sistema EAD</h1>
         </a>
@@ -76,13 +76,13 @@ export default function Header({ user, menuOpen, setMenuOpen }: HeaderProps) {
           <div className="relative group">
             <a
               href="/meu-carrinho"
-              className="p-2 rounded-md hover:bg-gray-100 transition"
+              className="p-2 rounded-md transition inline-block"
             >
               <ShoppingCart className="w-6 h-6 text-gray-700" />
             </a>
 
-            {/* Texto exibido no hover */}
-            <div className="absolute left-1/2 -bottom-6 transform -translate-x-1/2 text-xs text-white bg-gray-800 px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+            {/* Tooltip que aparece só no hover do ícone */}
+            <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 text-xs text-white bg-gray-800 px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
               {carrinhoCount === 1 ? "1 item" : `${carrinhoCount} itens`}
             </div>
           </div>
@@ -100,10 +100,10 @@ export default function Header({ user, menuOpen, setMenuOpen }: HeaderProps) {
                 <span className="text-gray-700 font-bold text-lg">
                   {user?.displayName
                     ? user.displayName
-                        .split(" ")
-                        .slice(0, 2)
-                        .map((word) => word.charAt(0).toUpperCase())
-                        .join("")
+                      .split(" ")
+                      .slice(0, 2)
+                      .map((word) => word.charAt(0).toUpperCase())
+                      .join("")
                     : "?"}
                 </span>
               )}

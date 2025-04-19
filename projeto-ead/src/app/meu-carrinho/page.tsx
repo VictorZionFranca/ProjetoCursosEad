@@ -72,11 +72,11 @@ export default function MeuCarrinhoPage() {
                   <img
                     src={curso.imagem}
                     alt={curso.titulo}
-                    className="w-20 h-20 object-cover rounded"
+                    className="w-[120px] h-[65px] object-cover rounded"
                   />
                   <div>
                     <h2 className="font-semibold text-md">{curso.titulo}</h2>
-                    <p className="text-sm text-gray-600 line-clamp-2 max-w-xs">
+                    <p className="text-sm text-gray-600 line-clamp-2 max-w-lg">
                       {curso.descricao}
                     </p>
                     <p className="text-sm text-blue-600 font-bold mt-1">

@@ -5,11 +5,12 @@ import { useRouter, usePathname } from "next/navigation";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../firebase/config";
 import Header from "./header";
+import Footer from "./footer"; // Importa o Footer
 import type { User as FirebaseUser } from "firebase/auth";
 
 export default function AppWrapper({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<FirebaseUser | null>(null);
-  const [loading, setLoading] = useState(true); // Estado de carregamento
+  const [loading, setLoading] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
@@ -17,38 +18,30 @@ export default function AppWrapper({ children }: { children: React.ReactNode }) 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser);
-      setLoading(false); // Finaliza o carregamento após verificar o estado de autenticação
+      setLoading(false);
 
-      // Se o usuário não estiver autenticado e estiver na página de login ou signup, redireciona para a página inicial
       if (firebaseUser && (pathname === "/login" || pathname === "/signup")) {
-        router.push("/inicio"); // Redireciona para a página inicial após login
+        router.push("/inicio");
       }
     });
 
     return () => unsubscribe();
   }, [pathname, router]);
 
-  if (loading) {
-    return null; 
-  }
+  if (loading) return null;
 
-  // Permite acessar as páginas públicas ("/", "/login", "/signup") sem autenticação
-  if (pathname === "/" || pathname === "/login" || pathname === "/signup") {
-    return <>{children}</>;
-  }
+  // Páginas públicas sem header/footer
+  const isPublicPage = pathname === "/" || pathname === "/login" || pathname === "/signup";
+  if (isPublicPage) return <>{children}</>;
 
-  // Se o usuário não estiver autenticado e tentar acessar uma página protegida, renderiza nada
-  if (!user) {
-    return null;
-  }
+  // Proteção de rota
+  if (!user) return null;
 
   return (
     <>
-      {/* Exibe o Header apenas nas páginas que não são de login ou cadastro */}
-      {user && pathname !== "/login" && pathname !== "/signup" && (
-        <Header menuOpen={menuOpen} setMenuOpen={setMenuOpen} user={user} />
-      )}
+      <Header menuOpen={menuOpen} setMenuOpen={setMenuOpen} user={user} />
       <main>{children}</main>
+      <Footer /> {/* Adiciona o Footer aqui */}
     </>
   );
 }
