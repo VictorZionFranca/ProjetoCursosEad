@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Contato() {
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
@@ -28,6 +28,15 @@ export default function Contato() {
     }
   };
 
+  useEffect(() => {
+    if (status === "success" || status === "error") {
+      const timer = setTimeout(() => {
+        setStatus("idle");
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [status]);
+
   return (
     <div className="max-w-3xl mx-auto px-4 py-12">
       <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">Entre em Contato</h1>
@@ -43,7 +52,7 @@ export default function Contato() {
             name="nome"
             id="nome"
             required
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2 focus:border-blue-500 focus:ring focus:ring-blue-200"
+            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:border-blue-500 focus:ring focus:ring-blue-200"
           />
         </div>
         <div>
@@ -53,7 +62,7 @@ export default function Contato() {
             name="email"
             id="email"
             required
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2 focus:border-blue-500 focus:ring focus:ring-blue-200"
+            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:border-blue-500 focus:ring focus:ring-blue-200"
           />
         </div>
         <div>
@@ -63,7 +72,7 @@ export default function Contato() {
             id="mensagem"
             rows={5}
             required
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2 focus:border-blue-500 focus:ring focus:ring-blue-200"
+            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:border-blue-500 focus:ring focus:ring-blue-200"
           ></textarea>
         </div>
 

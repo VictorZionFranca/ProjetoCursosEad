@@ -2,7 +2,7 @@
 
 export default function Footer() {
     return (
-      <footer className="bg-gray-900 text-gray-400 text-sm mt-12 border-t border-gray-700">
+      <footer className="bg-gray-900 text-gray-400 text-sm mt-12 border-t">
         <div className="max-w-[105rem] mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-3 gap-8">
           
           {/* Coluna 1 */}
