@@ -70,7 +70,14 @@ export default function PerfilPage() {
     }
   };
 
-  if (loading) return <div className="p-10">Carregando...</div>;
+  if (loading)
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-50 text-gray-700">
+        <p className="text-xl font-medium animate-pulse">
+          Carregando cursos...
+        </p>
+      </div>
+    );
 
   // Função para gerar as iniciais (primeiras duas letras do nome)
   const getIniciais = (nome: string) => {

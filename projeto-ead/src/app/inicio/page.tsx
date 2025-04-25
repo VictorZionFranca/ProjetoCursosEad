@@ -48,8 +48,13 @@ export default function DashboardPage() {
     }
   }, [user]);
 
-  if (!user || loading) return null;
-
+  if (!user || loading)
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-50 text-gray-700">
+        <p className="text-xl font-medium animate-pulse">Carregando cursos...</p>
+      </div>
+    );
+  
   const truncateText = (text: string, maxLength: number) => {
     return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
   };
@@ -59,7 +64,7 @@ export default function DashboardPage() {
       <main className="max-w-7xl mx-auto px-4 py-16">
         <h2 className="text-3xl font-bold mb-20">Cursos disponíveis</h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 place-items-center">
           {cursos.length === 0 ? (
             <p>Nenhum curso encontrado.</p>
           ) : (

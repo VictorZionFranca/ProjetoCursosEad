@@ -36,12 +36,11 @@ export default function MeuCarrinhoPage() {
     fetchCarrinho();
   }, [router]);
 
-  const removerDoCarrinho = async (index: number) => {
+  const removerDoCarrinho = async (id: string) => {
     const user = auth.currentUser;
     if (!user) return;
 
-    const novoCarrinho = [...carrinho];
-    novoCarrinho.splice(index, 1);
+    const novoCarrinho = carrinho.filter((curso) => curso.id !== id);
 
     try {
       const userRef = doc(db, "Users", user.uid);
@@ -52,7 +51,20 @@ export default function MeuCarrinhoPage() {
     }
   };
 
-  if (loading) return <p className="text-center mt-10">Carregando...</p>;
+  const redirecionarParaCheckout = () => {
+    // Redireciona para a página de checkout, passando os IDs dos cursos no carrinho
+    const cursosIds = JSON.stringify(carrinho.map((curso) => curso.id));
+    router.push(`/checkout?cursos=${encodeURIComponent(cursosIds)}`);
+  };
+
+  if (loading)
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-50 text-gray-700">
+        <p className="text-xl font-medium animate-pulse">
+          Carregando cursos...
+        </p>
+      </div>
+    );
 
   return (
     <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8 text-gray-800">
@@ -63,9 +75,9 @@ export default function MeuCarrinhoPage() {
           <p className="text-center text-gray-500">Seu carrinho está vazio.</p>
         ) : (
           <div className="space-y-6">
-            {carrinho.map((curso, index) => (
+            {carrinho.map((curso) => (
               <div
-                key={index}
+                key={curso.id} // Usando o ID como chave única
                 className="bg-white shadow-sm rounded-xl p-4 flex items-center justify-between hover:shadow-md transition"
               >
                 <div className="flex items-center space-x-4">
@@ -86,7 +98,7 @@ export default function MeuCarrinhoPage() {
                 </div>
 
                 <button
-                  onClick={() => removerDoCarrinho(index)}
+                  onClick={() => removerDoCarrinho(curso.id)} // Passando o ID para remover
                   className="text-red-500 text-sm font-medium hover:underline"
                 >
                   Remover
@@ -99,6 +111,15 @@ export default function MeuCarrinhoPage() {
                 Total: R${" "}
                 {carrinho.reduce((acc, curso) => acc + curso.preco, 0).toFixed(2)}
               </p>
+            </div>
+
+            <div className="text-right mt-6">
+              <button
+                onClick={redirecionarParaCheckout}
+                className="bg-green-600 text-white font-bold py-2 px-4 rounded hover:bg-green-700"
+              >
+                Finalizar Compra
+              </button>
             </div>
           </div>
         )}
